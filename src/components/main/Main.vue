@@ -6,7 +6,9 @@
     </div>
     <div class="content">
       <h3>Get your likes list ! </h3>
-      <a v-link="{path: '/login'}"><button class="loginButton">Go</button></a>
+      <a href="#" onclick="FB.login()">
+        <button class="loginButton">GO</button>
+      </a>
     </div>
     <div class="footer">
       <hr>
