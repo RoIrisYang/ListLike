@@ -2,7 +2,7 @@
   <div class="list">
     <div class="header">
       <div class="header-up">
-        <button class="logoutButton" onclick="FB.logout()">Logout</button>
+        <button class="logoutButton" @click="isLogout">Logout</button>
         <button class="logoutButton">{{Name}}</button>
         <h1>Listlike</h1>
       </div>
@@ -33,15 +33,41 @@
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      msg: 'List',
-      Name: 'Iris Yang',
-      number: 8
-    }
+import fb from 'facebook-login-promises';
+const params = {
+  appId: 328231444178125,
+};
+
+function callback(state) {
+  const process = state.loading ? 'loading' : 'loaded';
+  const connected = state.status === 'connected';
+  const firstname = state.data ? state.data.first_name : null;
+  const lastname = state.data ? state.data.last_name : null;
+  // console.log(state);
+  if (firstname) {
+    console.log(`process: ${process}`);
+    console.log(`connected: ${connected}`);
+    console.log(`your logged as: ${firstname} ${lastname}`);
   }
 }
+
+function logout() {
+  fb.callback.logout(params, callback);
+}
+
+export default {
+  data() {
+    return {
+     // Name: `${firstname} ${lastname}`,
+    };
+  },
+  methods: {
+    isLogout() {
+      logout();
+      this.$route.router.go({ name: 'main' });
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

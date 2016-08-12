@@ -5,11 +5,11 @@
 </template>
 
 <script>
-import main from './components/main/Main'
+import main from './components/main/Main';
 
 export default {
-  components: {main}
-}
+  components: { main },
+};
 </script>
 
 <style>

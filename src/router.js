@@ -1,22 +1,22 @@
-import Main from './components/main/Main'
-import List from './components/main/List'
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Main from './components/main/Main';
+import List from './components/main/List';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 
-Vue.use(VueRouter)
-var router = new VueRouter({
-  history: false
-})
+Vue.use(VueRouter);
+const router = new VueRouter({
+  history: false,
+});
 
 router.map({
   '/': {
     name: 'main',
-    component: Main
+    component: Main,
   },
   '/list': {
     name: 'list',
-    component: List
-  }
-})
+    component: List,
+  },
+});
 
-export default router
+export default router;

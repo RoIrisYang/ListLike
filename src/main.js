@@ -1,4 +1,4 @@
-import App from './App'
-import router from './router'
+import App from './App';
+import router from './router';
 
-router.start(App, 'app')
+router.start(App, 'app');

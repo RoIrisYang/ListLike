@@ -6,8 +6,7 @@
     </div>
     <div class="content">
       <h3>Get your likes list ! </h3>
-      <button class="loginButton" onclick="isLogin()">GO</button>
-      <button class="loginButton" onclick="FB.logout()">Logout</button>
+      <button class="loginButton" @click="isLogin">GO</button>
     </div>
     <div class="footer">
       <hr>
@@ -17,46 +16,43 @@
 </template>
 
 <script>
-import fb from 'facebook-login-promises'
+import fb from 'facebook-login-promises';
 const params = {
-  appId: 328231444178125
-}
+  appId: 328231444178125,
+  scope: 'user_likes',
+};
 
-function callback (state) {
-  console.log(state)
- 
-  const process = state.loading ? 'loading' : 'loaded'
-  const connected = state.status === 'connected'
+function callback(state) {
+  const process = state.loading ? 'loading' : 'loaded';
+  const connected = state.status === 'connected';
   const firstname = state.data ? state.data.first_name : null;
-  
-  console.log('process: ' + process);
-  console.log('connected: ' + connected);
+  const lastname = state.data ? state.data.last_name : null;
   if (firstname) {
-      console.log('your logged as: ' + firstname);
+    console.log(state);
+    console.log(state.data);
+    console.log(`process: ${process}`);
+    console.log(`connected: ${connected}`);
+    console.log(`your logged as: ${firstname} ${lastname}`);
   }
 }
 
 function login() {
-  fb.callback.login( params, callback);
+  fb.callback.login(params, callback);
 }
-
 
 export default {
-  data () {
+  data() {
     return {
-      msg: 'ListLike'
-    }
+      msg: 'ListLike',
+    };
   },
   methods: {
-    isLogin () {
-      login()
-      var status
-      // FB.checkLoginState().then(response => { status = response.status })
-      if (status === "connected")
-        this.$route.router.go({name: 'list'})
-    }
-  }
-}
+    isLogin() {
+      login();
+      this.$route.router.go({ name: 'list' });
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
