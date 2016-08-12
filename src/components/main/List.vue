@@ -2,7 +2,7 @@
   <div class="list">
     <div class="header">
       <div class="header-up">
-        <button class="logoutButton">Logout</button>
+        <button class="logoutButton" onclick="FB.logout()">Logout</button>
         <button class="logoutButton">{{Name}}</button>
         <h1>Listlike</h1>
       </div>

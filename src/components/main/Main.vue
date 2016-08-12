@@ -6,9 +6,8 @@
     </div>
     <div class="content">
       <h3>Get your likes list ! </h3>
-      <a href="#" onclick="FB.login()">
-        <button class="loginButton">GO</button>
-      </a>
+      <button class="loginButton" onclick="isLogin()">GO</button>
+      <button class="loginButton" onclick="FB.logout()">Logout</button>
     </div>
     <div class="footer">
       <hr>
@@ -18,10 +17,43 @@
 </template>
 
 <script>
+import fb from 'facebook-login-promises'
+const params = {
+  appId: 328231444178125
+}
+
+function callback (state) {
+  console.log(state)
+ 
+  const process = state.loading ? 'loading' : 'loaded'
+  const connected = state.status === 'connected'
+  const firstname = state.data ? state.data.first_name : null;
+  
+  console.log('process: ' + process);
+  console.log('connected: ' + connected);
+  if (firstname) {
+      console.log('your logged as: ' + firstname);
+  }
+}
+
+function login() {
+  fb.callback.login( params, callback);
+}
+
+
 export default {
   data () {
     return {
       msg: 'ListLike'
+    }
+  },
+  methods: {
+    isLogin () {
+      login()
+      var status
+      // FB.checkLoginState().then(response => { status = response.status })
+      if (status === "connected")
+        this.$route.router.go({name: 'list'})
     }
   }
 }
