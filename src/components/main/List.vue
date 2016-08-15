@@ -1,29 +1,27 @@
 <template>
-  <div class="list">
+  <div id="list">
     <div class="header">
       <div class="header-up">
         <button class="logoutButton" @click="isLogout">Logout</button>
-        <button class="logoutButton">{{Name}}</button>
+        <button class="logoutButton"><a href="{{web}}">{{Name}}</a></button>
         <h1>Listlike</h1>
       </div>
       <hr>
     </div>
     <div class="content">
-      <h3>List of Likes ({{number}})</h3>
-      <table>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Category</th>
-          <th>Created Time</th>
-        </tr>
-        <tbody>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tbody>
-      </table>
+      <h3>List of Likes ({{length}})</h3>
+      <div class="limit">
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Created Time</th>
+          </tr>
+          <tbody v-for="like in likes">
+            <td>{{like.name}}</td>
+            <td>{{like.created_time}}</td>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="footer">
       <hr>
@@ -33,38 +31,40 @@
 </template>
 
 <script>
+const request = require('superagent');
 import fb from 'facebook-login-promises';
 const params = {
   appId: 328231444178125,
 };
 
-function callback(state) {
-  const process = state.loading ? 'loading' : 'loaded';
-  const connected = state.status === 'connected';
-  const firstname = state.data ? state.data.first_name : null;
-  const lastname = state.data ? state.data.last_name : null;
-  // console.log(state);
-  if (firstname) {
-    console.log(`process: ${process}`);
-    console.log(`connected: ${connected}`);
-    console.log(`your logged as: ${firstname} ${lastname}`);
-  }
-}
-
-function logout() {
-  fb.callback.logout(params, callback);
-}
-
 export default {
   data() {
     return {
-     // Name: `${firstname} ${lastname}`,
+      Name: localStorage.getItem('Name'),
+      State: '',
+      length: 0,
+      likes: [],
+      web: `https://www.facebook.com/${localStorage.getItem('userID')}`,
     };
+  },
+  init() {
+    request.get(`https://graph.facebook.com/v2.7/me/likes?access_token=${localStorage.getItem('accessToken')}`)
+      .end((err, res) => {
+        this.length = res.body.data.length;
+        this.likes = res.body.data;
+      });
   },
   methods: {
     isLogout() {
-      logout();
+      this.logout();
+    },
+    logout() {
+      fb.callback.logout(params, this.callback);
+      localStorage.clear();
       this.$route.router.go({ name: 'main' });
+    },
+    callback(state) {
+      this.State = state;
     },
   },
 };
@@ -101,12 +101,12 @@ h1 {
 }
 
 .content {
-  height: 200px;
+  max-height: 450px;
   padding: 10px;
+  overflow-y: auto;
 }
 
 table {
-    border-collapse: collapse;
     width: 100%;
 }
 

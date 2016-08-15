@@ -16,29 +16,9 @@
 </template>
 
 <script>
-import fb from 'facebook-login-promises';
-const params = {
-  appId: 328231444178125,
-  scope: 'user_likes',
-};
-
-function callback(state) {
-  const process = state.loading ? 'loading' : 'loaded';
-  const connected = state.status === 'connected';
-  const firstname = state.data ? state.data.first_name : null;
-  const lastname = state.data ? state.data.last_name : null;
-  if (firstname) {
-    console.log(state);
-    console.log(state.data);
-    console.log(`process: ${process}`);
-    console.log(`connected: ${connected}`);
-    console.log(`your logged as: ${firstname} ${lastname}`);
-  }
-}
-
-function login() {
-  fb.callback.login(params, callback);
-}
+const request = require('superagent');
+import facebookLogin from 'facebook-login';
+const api = facebookLogin({ appId: '328231444178125', scope: 'user_likes' });
 
 export default {
   data() {
@@ -48,8 +28,16 @@ export default {
   },
   methods: {
     isLogin() {
-      login();
-      this.$route.router.go({ name: 'list' });
+      api.login().then(response => {
+       // console.log(response);
+        localStorage.setItem('accessToken', response.authResponse.accessToken);
+        localStorage.setItem('userID', response.authResponse.userID);
+        request.get(`https://graph.facebook.com/v2.7/me?access_token=${localStorage.getItem('accessToken')}`)
+          .end((err, res) => {
+            localStorage.setItem('Name', res.body.name);
+            this.$route.router.go({ name: 'list' });
+          });
+      });
     },
   },
 };
@@ -87,4 +75,16 @@ h1 {
   background-color: #00AA55;
 }
 
+.logoutButton {
+  float: right;
+  margin-top: 10px;
+  margin-right: 20px;
+  min-width: 60px;
+  min-height: 30px;
+  border-radius: 8px;
+  border: none;
+  background-color: white;
+  font-size: 14px;
+  color: #55AA00;
+}
 </style>

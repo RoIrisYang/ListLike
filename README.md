@@ -1,6 +1,6 @@
 # listlike
 
-> A Vue.js project
+> A simple project for practicing getting Facebook data.
 
 ## Build Setup
 
